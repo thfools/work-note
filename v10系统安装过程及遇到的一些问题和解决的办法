@@ -1,0 +1,36 @@
+上班第一天 v10系统安装过程及遇到的一些问题和解决的办法
+
+安装步骤可以大致总结如下：
+
+1.找到 "启用和关闭windows功能"选项，勾选与安装IIS所需要的一系列功能选项。  ----windows功能配置
+
+2.打开Internet信息服务管理器，添加HR应用程序池和HR虚拟目录。
+3.将8i-升级包中的HR文件夹和webctrl_client文件夹解压到 C:\inetpub\wwwroot目录下。
+4.添加IIS_IUSRS用户对HR文件夹具有完全控制的权限。
+5.在Internet信息服务管理器中，将HR虚拟目录转换为应用程序。
+6.将默认网站下的默认文档中的default.aspx文件置顶。                      ----IIS管理器配置
+
+
+7.启用sa账户，还原数据库
+8.运行HR目录下的installservice.bat文件，安装服务
+9.运行HR/bin目录下得DBConfig.exe文件连接到8iData数据库
+10.重启IIS
+11.访问本地HR网站 http://localhost/hr                              ----报表等服务的安装与HR网站的访问
+
+
+安装过程遇到的一些问题：
+1.打开计算机管理页面，在服务和应用程序选项下找不到Internet 信息服务管理器(IIS)
+解决办法：这个问题的原因是第一步"启用和关闭windows功能"时，没有勾选IIS相关功能。
+
+2.电脑已经安装了.net framework 4.0 ，但应用程序池里却没有asp.net 4.0版本，只有2.0.
+解决办法：这个问题的原因是.net framework 4.0没有注册在IIS上，打开C:\WINDOWS\Microsoft.NET\Framework\v4.0.30319\aspnet_regiis.exe，
+将其拖到dos命令行中，近接着输入 空格和"-i"，运行，之后就可以看到运行池里出现4.0版本，但2.0版本消失了，因为2.0版本被4.0版本覆盖了。
+
+3. 最后访问本地HR网站时，网站首页显示：
+HTTP 错误 500.21 - Internal Server Error 处理程序“ExtensionlessUrlHandler-ISAPI-4.0_64bit”在其模块列表中有一个错误模块“IsapiModule” 
+解决办法：将HR应用程序使用的应用程序池托管管道模式改为集成，具体操作是ASP.NET v4.0 Classic 的托管管道模式改为集成，因为HR使用的应用程序池是
+ASP.NET v4.0 Classic。
+
+
+
+
